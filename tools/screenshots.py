@@ -41,6 +41,22 @@ def main():
         enlarge(page, "space")
         page.wait_for_timeout(800)
         page.screenshot(path=OUT / "space-view.png")
+        # name search (needs tools/dev_proxy.py running on :8787)
+        page.goto(URL)
+        page.wait_for_function("window.ephemeral && window.ephemeral.state.objects.length > 0")
+        page.evaluate("""() => { const p = document.querySelector('#proxy');
+            p.value = 'http://localhost:8787'; p.dispatchEvent(new Event('change')); }""")
+        page.click("#btn-add")
+        card = page.locator("#objects .obj").last
+        card.locator(".o-name").fill("Apophis")
+        card.locator(".o-name").press("Enter")
+        try:
+            page.wait_for_function("(() => { const o = window.ephemeral.state.objects.at(-1); return o.results && ['horizons','mpc','scout'].every(k => o.results[k].status !== 'loading'); })()", timeout=60000)
+            card.locator(".o-table summary").click()
+            page.wait_for_timeout(800)
+            page.screenshot(path=OUT / "name-search.png")
+        except Exception as exc:  # proxy not running
+            print("skipped name-search.png:", exc)
         browser.close()
     print("saved to", OUT)
 

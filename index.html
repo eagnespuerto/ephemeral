@@ -56,10 +56,14 @@
         <p id="you-label" class="hint"></p>
       </section>
 
-      <details class="block">
-        <summary>Scout proxy (optional)</summary>
-        <p class="hint">JPL Scout does not allow browser calls from other sites, so Ephemeral reads an hourly snapshot by default. For live data, deploy the small Cloudflare Worker in <code>worker/scout-proxy.js</code> and paste its URL here. Use <code>{url}</code> where the Scout URL should go, or leave it out to append it.</p>
-        <input id="proxy" type="url" placeholder="https://your-worker.workers.dev/?url={url}">
+      <details class="block" id="proxy-block">
+        <summary>Proxy for Horizons, MPC and live Scout</summary>
+        <p class="hint">JPL Horizons, the MPC Ephemeris Service and JPL Scout do not allow calls from other websites. Deploy the small Cloudflare Worker in <code>worker/</code> (<code>npx wrangler deploy</code>) and paste its URL here. Without it, name search still finds Scout objects through the hourly snapshot.</p>
+        <div class="row-btns">
+          <input id="proxy" type="url" placeholder="https://ephemeral-proxy.you.workers.dev" style="flex:1">
+          <button id="btn-proxy-test" class="ghost small">Test</button>
+        </div>
+        <p id="proxy-status" class="hint"></p>
       </details>
     </aside>
 
@@ -116,15 +120,28 @@
     <article class="obj">
       <div class="obj-head">
         <label class="swatch" title="Colour"><input type="color" class="o-color"></label>
-        <input class="o-name" placeholder="Object name (for Scout)" spellcheck="false">
+        <input class="o-name" placeholder="Name, e.g. Apophis, 2024 YR4, 1P" spellcheck="false" title="Press Enter to search Horizons, MPC and Scout">
+        <button class="o-search small" title="Search JPL Horizons, the MPC and JPL Scout">Search</button>
         <button class="o-vis icon ghost" title="Show / hide">●</button>
         <button class="o-del icon ghost" title="Remove">✕</button>
       </div>
-      <textarea class="o-text" rows="5" spellcheck="false" placeholder="Paste an ephemeris here: JPL Horizons observer table, MPC Ephemeris Service, Find_Orb, 80-column astrometry, or lines of  time  RA  Dec  [Δ au]"></textarea>
+      <details class="o-opts">
+        <summary class="o-span-sum"></summary>
+        <div class="span-grid">
+          <label>From (UTC)<input type="datetime-local" class="o-from" step="60"></label>
+          <label>To (UTC)<input type="datetime-local" class="o-to" step="60"></label>
+          <label>Step<select class="o-step">
+            <option value="10">10 min</option><option value="60">1 hour</option><option value="360" selected>6 hours</option><option value="1440">1 day</option><option value="10080">7 days</option>
+          </select></label>
+          <button class="o-span-reset ghost small" title="Use 15 days either side of the time slider">Around slider</button>
+        </div>
+      </details>
+      <div class="o-results"></div>
+      <textarea class="o-text" rows="5" spellcheck="false" placeholder="Paste an ephemeris here, or search by name above. Reads JPL Horizons, MPC Ephemeris Service, Find_Orb, 80-column astrometry, or lines of  time  RA  Dec  [Δ au]"></textarea>
       <div class="o-status"></div>
+      <details class="o-table"><summary>Ephemeris table</summary><div class="tbl"></div></details>
       <div class="obj-row">
         <label class="inline">Discovery site <input class="o-disc" list="obscode-list" size="5" maxlength="3" placeholder="code"></label>
-        <button class="o-scout ghost small">Ping Scout</button>
       </div>
       <div class="o-scout-status"></div>
     </article>
@@ -133,7 +150,8 @@
   <dialog id="help">
     <h2>How to use Ephemeral</h2>
     <ol>
-      <li><b>Paste an ephemeris</b> into an object card. It reads JPL Horizons observer tables (text or CSV), the MPC Ephemeris Service, Find_Orb, MPC 80-column astrometry, and simple <code>time RA Dec [Δ]</code> tables. Sexagesimal RA is hours; decimal RA is degrees. Positions are taken as J2000.</li>
+      <li><b>Search by name</b>: type a name or designation (Apophis, 2024 YR4, 1P, C/2023 A3, Mars) and press Enter. Ephemeral asks JPL Horizons, the MPC Ephemeris Service and JPL Scout, and fills the card with the best ephemeris. Click <i>Use</i> to switch source. Set the span and step under the name. Horizons and MPC need the proxy (see the sidebar).</li>
+      <li><b>Or paste an ephemeris</b> into an object card. It reads JPL Horizons observer tables (text or CSV), the MPC Ephemeris Service, Find_Orb, MPC 80-column astrometry, and simple <code>time RA Dec [Δ]</code> tables. Sexagesimal RA is hours; decimal RA is degrees. Positions are taken as J2000.</li>
       <li><b>Discovery POV</b> shows the sky from the discovery site. Type its MPC code in the card. Horizons topocentric tables and 80-column astrometry (the <code>*</code> line) fill it in for you.</li>
       <li><b>Your POV</b> uses your location. Click <i>Use my location</i> or type a code.</li>
       <li>In the domes the track is drawn against the sky at the chosen time, like a finder path among the stars. The dot is where the object is at that moment.</li>

@@ -1,9 +1,10 @@
-import { radecToVec, AU_KM } from './astro.js';
+import { radecToVec, AU_KM, fmtRA, fmtDec } from './astro.js';
 import { makeObject, reparse, setScout, span, hasRows, helioArc } from './model.js';
 import { DomeView, describe } from './dome.js';
 import { ChartView } from './chart.js';
 import { SpaceView } from './space.js';
-import { lookup, snapshotIndex, scoutPage } from './scout.js';
+import { lookup, snapshotIndex, scoutPage, proxyBase, getJSON } from './scout.js';
+import { searchHorizons, searchMPC, searchScout } from './search.js';
 import { fmtUTC } from './canvas.js';
 
 const $ = sel => document.querySelector(sel);
@@ -231,6 +232,7 @@ function renderObjects() {
     });
     q('.o-text').addEventListener('input', e => {
       o.text = e.target.value;
+      o.autoText = false; o.src = null;
       debounce(o, 'parse', () => {
         const hadRows = hasRows(o);
         const oldName = o.name;
@@ -238,12 +240,21 @@ function renderObjects() {
         q('.o-name').value = o.name;
         q('.o-disc').value = o.discCode;
         statusLine(o, q('.o-status'));
+        tableSummary(o);
+        renderResults(o);
         updateRange();
         if (!hadRows && hasRows(o)) { setTime(o.parsed.rows[0].t); chart.fit(state.objects); }
         if (o.name && o.name !== oldName) pingScout(o, true);
       }, 250);
     });
-    q('.o-scout').addEventListener('click', () => pingScout(o, false));
+    q('.o-name').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); runSearch(o); } });
+    q('.o-search').addEventListener('click', () => runSearch(o));
+    wireSpan(o, el);
+    q('.o-results').addEventListener('click', e => onResultClick(o, e));
+    const tbl = q('.o-table');
+    tbl.addEventListener('toggle', () => { if (tbl.open) renderTable(o, tbl); });
+    renderResults(o);
+    tableSummary(o);
     statusLine(o, q('.o-status'));
     scoutLine(o, q('.o-scout-status'));
     o._el = el;
@@ -269,7 +280,7 @@ function scoutLine(o, node) {
   else if (s.status === 'ok') {
     const n = o.els.length;
     node.innerHTML = `<span class="ok">Scout: ${n} orbit samples</span> via ${escapeHtml(s.source)}${s.fetched ? ' (' + escapeHtml(s.fetched.replace('T', ' ').replace(/\..*|Z/, '')) + ' UTC)' : ''} · <a href="${scoutPage(o.name)}" target="_blank" rel="noopener">open in Scout</a>`;
-  } else if (s.status === 'missing') node.textContent = s.note || 'Not on Scout.';
+  } else if (s.status === 'missing') node.textContent = o.results ? '' : (s.note || 'Not on Scout.');
   else node.innerHTML = `<span class="err">${escapeHtml(s.note || 'Scout error')}</span>`;
 }
 
@@ -288,6 +299,189 @@ async function pingScout(o, auto) {
   updateRange();
   if (res.status === 'ok' && !hasRows(o)) { chart.fit(state.objects); }
   app.dirty();
+}
+
+// ---------------- name search (Horizons, MPC, Scout) ----------------
+const SOURCES = [['horizons', 'Horizons'], ['mpc', 'MPC'], ['scout', 'Scout']];
+const PRIORITY = { horizons: 3, mpc: 2, scout: 1 };
+const isoMin = ms => new Date(ms).toISOString().slice(0, 16);
+const STEP_LABEL = { 10: '10 min', 60: '1 h', 360: '6 h', 1440: '1 day', 10080: '7 days' };
+
+// Default span: 15 days either side of the slider.
+function searchSpan(o) {
+  if (o.span) return o.span;
+  const hour = 3600e3;
+  const start = Math.floor((state.time - 15 * 864e5) / hour) * hour;
+  return { start, stop: start + 30 * 864e5, stepMin: o.stepMin || 360 };
+}
+
+function spanSummary(o) {
+  const sp = searchSpan(o);
+  const step = STEP_LABEL[sp.stepMin] || `${sp.stepMin} min`;
+  return `Search span: ${isoMin(sp.start).slice(0, 10)} → ${isoMin(sp.stop).slice(0, 10)}, every ${step}${o.span ? '' : ' (around the slider)'}`;
+}
+
+function wireSpan(o, el) {
+  const q = s => el.querySelector(s);
+  const fill = () => {
+    const sp = searchSpan(o);
+    q('.o-from').value = isoMin(sp.start);
+    q('.o-to').value = isoMin(sp.stop);
+    q('.o-step').value = String(sp.stepMin);
+    q('.o-span-sum').textContent = spanSummary(o);
+  };
+  const read = () => {
+    const a = Date.parse(q('.o-from').value + ':00Z'), b = Date.parse(q('.o-to').value + ':00Z');
+    const stepMin = +q('.o-step').value;
+    o.stepMin = stepMin;
+    if (Number.isFinite(a) && Number.isFinite(b) && b > a) o.span = { start: a, stop: b, stepMin };
+    else if (o.span) o.span.stepMin = stepMin;
+    fill();
+  };
+  q('.o-opts').addEventListener('toggle', fill);
+  for (const c of ['.o-from', '.o-to', '.o-step']) q(c).addEventListener('change', read);
+  q('.o-span-reset').addEventListener('click', () => { o.span = null; fill(); });
+  o._fillSpan = fill;
+  fill();
+}
+
+async function runSearch(o) {
+  const name = (o._el ? o._el.querySelector('.o-name').value : o.name).trim();
+  if (!name) { toast('Type a name or designation first.'); return; }
+  o.name = name; o.nameEdited = true;
+  const span = searchSpan(o);
+  if ((span.stop - span.start) / (span.stepMin * 60000) > 5000) { toast('That span and step give too many rows. Use a bigger step.'); return; }
+  const token = {};
+  o._search = token;
+  o.results = {};
+  for (const [k] of SOURCES) o.results[k] = { status: 'loading' };
+  renderResults(o);
+  const jobs = {
+    horizons: () => searchHorizons(name, span, state.proxy),
+    mpc: () => searchMPC(name, span, state.proxy),
+    // Scout orbits are short-arc, so default to today rather than the slider time.
+    scout: () => searchScout(name, o.span ? span : { start: Math.floor(Date.now() / 3600e3) * 3600e3 - 15 * 864e5, stop: Math.floor(Date.now() / 3600e3) * 3600e3 + 15 * 864e5, stepMin: span.stepMin }, state.proxy),
+  };
+  await Promise.all(SOURCES.map(async ([k]) => {
+    let res;
+    try { res = await jobs[k](); } catch (e) { res = { status: 'error', note: e.message }; }
+    if (o._search !== token) return; // a newer search started
+    o.results[k] = res;
+    if (k === 'scout' && res.scout) {
+      pinged.set(o, name);
+      setScout(o, res.scout);
+      if (o._el) scoutLine(o, o._el.querySelector('.o-scout-status'));
+    }
+    if (res.status === 'ok' && (!o.text.trim() || o.autoText) && (!o.src || PRIORITY[k] > PRIORITY[o.src])) useResult(o, k, true);
+    renderResults(o);
+    app.dirty();
+  }));
+  if (o._search === token && !SOURCES.some(([k]) => ['ok', 'choices'].includes(o.results[k].status))) {
+    toast(`No ephemeris found for "${name}".`);
+  }
+}
+
+async function runHorizonsChoice(o, cmd, label) {
+  const span = searchSpan(o);
+  o.results.horizons = { status: 'loading', note: label };
+  renderResults(o);
+  const res = await searchHorizons(o.name, span, state.proxy, cmd);
+  o.results.horizons = res;
+  if (res.status === 'ok') useResult(o, 'horizons', false);
+  renderResults(o);
+}
+
+function useResult(o, k, auto) {
+  const res = o.results && o.results[k];
+  if (!res || res.status !== 'ok') return;
+  o.text = res.text;
+  o.src = k;
+  o.autoText = auto;
+  reparse(o, state.obscodes);
+  if (o._el) {
+    const q = s => o._el.querySelector(s);
+    q('.o-text').value = o.text;
+    q('.o-disc').value = o.discCode;
+    statusLine(o, q('.o-status'));
+    tableSummary(o);
+    const tbl = q('.o-table');
+    if (tbl.open) renderTable(o, tbl);
+  }
+  updateRange();
+  if (hasRows(o)) {
+    const r = o.parsed.rows;
+    const inside = t => t >= r[0].t && t <= r[r.length - 1].t;
+    if (!inside(state.time)) setTime(inside(Date.now()) ? Date.now() : r[0].t);
+  }
+  chart.fit(state.objects);
+  app.dirty();
+}
+
+function onResultClick(o, e) {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.dataset.use) useResult(o, b.dataset.use, false);
+  else if (b.dataset.cmd) { runHorizonsChoice(o, b.dataset.cmd, b.textContent); return; }
+  else if (b.dataset.proxy) { $('#proxy-block').open = true; $('#proxy').focus(); }
+  renderResults(o);
+}
+
+function renderResults(o) {
+  if (!o._el) return;
+  const node = o._el.querySelector('.o-results');
+  if (!o.results) { node.innerHTML = ''; return; }
+  node.innerHTML = SOURCES.map(([k, label]) => {
+    const r = o.results[k];
+    if (!r) return '';
+    let msg = '', btn = '', extra = '';
+    const note = r.note ? ` <span>${escapeHtml(r.note)}</span>` : '';
+    switch (r.status) {
+      case 'loading': msg = `searching…${note}`; break;
+      case 'ok':
+        msg = `<span class="ok">✓ ${escapeHtml(r.label || '')}</span>${note}`;
+        btn = o.src === k ? '<button class="use ghost" disabled>In use</button>' : `<button class="use" data-use="${k}">Use</button>`;
+        break;
+      case 'choices':
+        msg = escapeHtml(r.note || 'Several matches:');
+        extra = `<div class="choices">${r.choices.map(c => `<button class="ghost" data-cmd="${escapeHtml(c.cmd)}">${escapeHtml(c.label)}</button>`).join('')}</div>`;
+        break;
+      case 'noproxy':
+        msg = `Needs your proxy. <a href="${escapeHtml(r.link)}" target="_blank" rel="noopener">Open ${label} ↗</a>`;
+        btn = '<button class="use ghost" data-proxy="1">Set proxy</button>';
+        break;
+      case 'missing': msg = escapeHtml(r.note || 'Not found.'); break;
+      default: msg = `<span class="err">${escapeHtml(r.note || 'Error')}</span>`;
+    }
+    return `<div class="res${o.src === k ? ' inuse' : ''}"><span class="src">${label}</span><span class="msg">${msg}</span>${btn || '<span></span>'}${extra}</div>`;
+  }).join('');
+}
+
+function tableSummary(o) {
+  if (!o._el) return;
+  const n = hasRows(o) ? o.parsed.rows.length : 0;
+  o._el.querySelector('.o-table').hidden = !n;
+  o._el.querySelector('.o-table summary').textContent = `Ephemeris table (${n} rows) · click a row to jump there`;
+}
+
+function renderTable(o, details) {
+  const host = details.querySelector('.tbl');
+  if (!hasRows(o)) { host.innerHTML = ''; return; }
+  const rows = o.parsed.rows;
+  const every = Math.ceil(rows.length / 1500);
+  const show = every > 1 ? rows.filter((_, i) => i % every === 0) : rows;
+  let near = 0;
+  for (let i = 0; i < show.length; i++) if (Math.abs(show[i].t - state.time) < Math.abs(show[near].t - state.time)) near = i;
+  host.innerHTML = `<table><thead><tr><th>UTC</th><th>RA (J2000)</th><th>Dec</th><th>Δ au</th><th>mag</th></tr></thead><tbody>${show.map((r, i) =>
+    `<tr data-t="${r.t}"${i === near ? ' class="now"' : ''}><td>${new Date(r.t).toISOString().slice(0, 16).replace('T', ' ')}</td><td>${fmtRA(r.ra)}</td><td>${fmtDec(r.dec)}</td><td>${r.delta != null ? r.delta.toFixed(r.delta < 0.1 ? 5 : 4) : '—'}</td><td>${r.mag ?? '—'}</td></tr>`).join('')}</tbody></table>`;
+  host.onclick = e => {
+    const tr = e.target.closest('tr[data-t]');
+    if (!tr) return;
+    host.querySelectorAll('tr.now').forEach(x => x.classList.remove('now'));
+    tr.classList.add('now');
+    setTime(+tr.dataset.t);
+  };
+  const cur = host.querySelector('tr.now');
+  if (cur) host.scrollTop = cur.offsetTop - host.clientHeight / 2;
 }
 
 $('#btn-add').addEventListener('click', () => { addObject({}); const ta = $('#objects .obj:last-child .o-text'); ta && ta.focus(); });
@@ -359,7 +553,19 @@ $('#btn-geo').addEventListener('click', () => {
   }, err => toast('Location not available: ' + err.message), { timeout: 10000 });
 });
 $('#proxy').value = state.proxy;
-$('#proxy').addEventListener('change', e => { state.proxy = e.target.value.trim(); store.set('proxy', state.proxy); });
+$('#proxy').addEventListener('change', e => { state.proxy = e.target.value.trim(); store.set('proxy', state.proxy); testProxy(); });
+$('#btn-proxy-test').addEventListener('click', testProxy);
+async function testProxy() {
+  const base = proxyBase(state.proxy);
+  const out = $('#proxy-status');
+  if (!base) { out.textContent = state.proxy ? 'That does not look like a URL.' : 'No proxy set.'; return; }
+  out.textContent = 'Testing…';
+  try {
+    const j = await getJSON(base + '/', 8000);
+    out.textContent = j && j.ok ? `Proxy works (${j.service || 'ok'}).` : 'Proxy answered, but not as expected.';
+  } catch (e) { out.textContent = `Proxy not reachable: ${e.message}`; }
+}
+if (state.proxy) testProxy();
 
 // ---------------- panels ----------------
 document.querySelectorAll('.panel .max').forEach(b => b.addEventListener('click', () => {
