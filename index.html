@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ephemeral — a sky plotter for ephemerides</title>
+  <meta name="description" content="Paste an ephemeris and see the object from its discovery site, from where you are, and in space. Pings JPL Scout for tentative orbits.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23070a14'/%3E%3Cpath d='M5 21 Q16 4 27 12' stroke='%23ffb347' stroke-width='2.4' fill='none'/%3E%3Ccircle cx='22' cy='9.6' r='3' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#0d1324" stroke="#2a3557"/><path d="M5 21 Q16 4 27 12" stroke="#ffb347" stroke-width="2.4" fill="none"/><circle cx="22" cy="9.6" r="3" fill="#fff"/></svg>
+      <h1>Ephemeral</h1>
+      <span class="tag">paste an ephemeris, see the sky</span>
+    </div>
+    <div class="top-actions">
+      <button id="btn-share" class="ghost" title="Copy a link that holds everything you pasted">Share link</button>
+      <button id="btn-help" class="ghost">Help</button>
+      <a class="ghost btn" href="https://github.com/eagnespuerto/ephemeral" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="side">
+      <section class="block">
+        <div class="block-head">
+          <h2>Objects</h2>
+          <div class="row-btns">
+            <button id="btn-add" title="Add an empty object">+ Add</button>
+            <button id="btn-sample" class="ghost" title="Load a real Horizons ephemeris of 2024 YR4 seen from ATLAS Chile">Sample</button>
+          </div>
+        </div>
+        <div id="objects"></div>
+        <label class="scout-pick">
+          <span>Add a live Scout object</span>
+          <select id="scout-list"><option value="">loading Scout list…</option></select>
+        </label>
+        <p id="scout-stamp" class="hint"></p>
+      </section>
+
+      <section class="block">
+        <h2>Your location</h2>
+        <div class="grid3">
+          <label>Lat °<input id="you-lat" type="number" step="0.0001"></label>
+          <label>Lon °E<input id="you-lon" type="number" step="0.0001"></label>
+          <label>Height m<input id="you-h" type="number" step="1"></label>
+        </div>
+        <div class="row-btns">
+          <button id="btn-geo" class="ghost">Use my location</button>
+          <label class="inline">or MPC code <input id="you-code" list="obscode-list" size="5" maxlength="3" placeholder="e.g. 568"></label>
+        </div>
+        <p id="you-label" class="hint"></p>
+      </section>
+
+      <details class="block">
+        <summary>Scout proxy (optional)</summary>
+        <p class="hint">JPL Scout does not allow browser calls from other sites, so Ephemeral reads an hourly snapshot by default. For live data, deploy the small Cloudflare Worker in <code>worker/scout-proxy.js</code> and paste its URL here. Use <code>{url}</code> where the Scout URL should go, or leave it out to append it.</p>
+        <input id="proxy" type="url" placeholder="https://your-worker.workers.dev/?url={url}">
+      </details>
+    </aside>
+
+    <main class="main">
+      <div class="timebar">
+        <button id="btn-play" class="icon" title="Play / pause (space)">▶</button>
+        <select id="speed" title="Playback speed">
+          <option value="60">1 min/s</option>
+          <option value="600">10 min/s</option>
+          <option value="3600" selected>1 h/s</option>
+          <option value="21600">6 h/s</option>
+          <option value="86400">1 day/s</option>
+        </select>
+        <input id="slider" type="range" min="0" max="1000" step="1" value="500" aria-label="Time">
+        <input id="when" type="datetime-local" step="60" title="Time (UTC)">
+        <span class="utc">UTC</span>
+        <button id="btn-now" class="ghost" title="Jump to now">Now</button>
+        <button id="btn-disc" class="ghost" title="Jump to the discovery time of the selected object">Discovery</button>
+      </div>
+
+      <div class="panels" id="panels">
+        <section class="panel" data-panel="disc">
+          <header><h3>Discovery POV</h3><span class="sub" id="disc-sub"></span><button class="max" title="Enlarge">⤢</button></header>
+          <canvas id="cv-disc"></canvas>
+          <footer id="disc-info"></footer>
+        </section>
+        <section class="panel" data-panel="you">
+          <header><h3>Your POV</h3><span class="sub" id="you-sub"></span><button class="max" title="Enlarge">⤢</button></header>
+          <canvas id="cv-you"></canvas>
+          <footer id="you-info"></footer>
+        </section>
+        <section class="panel" data-panel="chart">
+          <header><h3>Sky chart</h3><span class="sub">RA/Dec · drag to pan, scroll to zoom</span>
+            <button id="btn-fit" class="ghost small">Fit</button><button class="max" title="Enlarge">⤢</button></header>
+          <canvas id="cv-chart"></canvas>
+          <footer id="chart-info"><span class="key"><i class="solid"></i>geocentre</span><span class="key"><i class="dash1"></i>discovery site</span><span class="key"><i class="dash2"></i>you</span><span class="key"><i class="dots"></i>Scout orbit samples</span></footer>
+        </section>
+        <section class="panel" data-panel="space">
+          <header><h3>Space View</h3><span class="sub">ecliptic · drag to turn, scroll to zoom</span>
+            <button id="btn-top" class="ghost small">Top</button><button id="btn-side" class="ghost small">Side</button>
+            <button id="btn-centre" class="ghost small">Centre: Sun</button><button class="max" title="Enlarge">⤢</button></header>
+          <canvas id="cv-space"></canvas>
+          <footer id="space-info"></footer>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <datalist id="obscode-list"></datalist>
+  <div id="tooltip" class="tooltip" hidden></div>
+  <div id="toast" class="toast" hidden></div>
+
+  <template id="tpl-object">
+    <article class="obj">
+      <div class="obj-head">
+        <label class="swatch" title="Colour"><input type="color" class="o-color"></label>
+        <input class="o-name" placeholder="Object name (for Scout)" spellcheck="false">
+        <button class="o-vis icon ghost" title="Show / hide">●</button>
+        <button class="o-del icon ghost" title="Remove">✕</button>
+      </div>
+      <textarea class="o-text" rows="5" spellcheck="false" placeholder="Paste an ephemeris here: JPL Horizons observer table, MPC Ephemeris Service, Find_Orb, 80-column astrometry, or lines of  time  RA  Dec  [Δ au]"></textarea>
+      <div class="o-status"></div>
+      <div class="obj-row">
+        <label class="inline">Discovery site <input class="o-disc" list="obscode-list" size="5" maxlength="3" placeholder="code"></label>
+        <button class="o-scout ghost small">Ping Scout</button>
+      </div>
+      <div class="o-scout-status"></div>
+    </article>
+  </template>
+
+  <dialog id="help">
+    <h2>How to use Ephemeral</h2>
+    <ol>
+      <li><b>Paste an ephemeris</b> into an object card. It reads JPL Horizons observer tables (text or CSV), the MPC Ephemeris Service, Find_Orb, MPC 80-column astrometry, and simple <code>time RA Dec [Δ]</code> tables. Sexagesimal RA is hours; decimal RA is degrees. Positions are taken as J2000.</li>
+      <li><b>Discovery POV</b> shows the sky from the discovery site. Type its MPC code in the card. Horizons topocentric tables and 80-column astrometry (the <code>*</code> line) fill it in for you.</li>
+      <li><b>Your POV</b> uses your location. Click <i>Use my location</i> or type a code.</li>
+      <li>In the domes the track is drawn against the sky at the chosen time, like a finder path among the stars. The dot is where the object is at that moment.</li>
+      <li><b>Sky chart</b> is a zoomable RA/Dec plot. When the ephemeris has a distance (Δ), the dashed tracks show parallax from each site.</li>
+      <li><b>Space View</b> turns RA, Dec and Δ into a heliocentric arc. If the object has a name, <i>Ping Scout</i> asks JPL Scout for its tentative orbit and draws the sample orbits as a cloud.</li>
+      <li><b>Share link</b> packs everything into the URL.</li>
+    </ol>
+    <p class="hint">Astronomy: <a href="https://github.com/cosinekitty/astronomy" target="_blank" rel="noopener">Astronomy Engine</a>. Stars and constellation lines: <a href="https://github.com/ofrohn/d3-celestial" target="_blank" rel="noopener">d3-celestial</a> (BSD-3). Observatory codes: Minor Planet Center. Tentative orbits: NASA/JPL CNEOS Scout. Not for planning critical observations.</p>
+    <form method="dialog"><button>Close</button></form>
+  </dialog>
+</body>
+</html>

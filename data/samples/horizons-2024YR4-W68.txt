@@ -1,0 +1,348 @@
+API VERSION: 1.2
+API SOURCE: NASA/JPL Horizons API
+
+*******************************************************************************
+JPL/HORIZONS                     (2024 YR4)                2026-Nov-06 14:18:57
+Rec #:50585010 (+COV) Soln.date: 2026-Jul-28_09:44:17    # obs: 485 (2024-2026)
+ 
+IAU76/J2000 helio. ecliptic osc. elements (au, days, deg., period=Julian yrs):
+ 
+  EPOCH=  2460739.5 ! 2025-Mar-05.00 (TDB)         Residual RMS= .058713
+   EC= .6615750116186513   QR= .8515156397416902   TP= 2460636.9218399539
+   OM= 271.3664200237398   W=  134.3639389609157   IN= 3.408195287401417
+   A= 2.516113375121619    MA= 25.33166109988058   ADIST= 4.180711110501549
+   PER= 3.9912             N= .246949849           ANGMOM= .020461512
+   DAN= 2.63269            DDN= .96737             L= 45.7810608
+   B= 2.4358598            MOID= .00291856         TP= 2024-Nov-22.4218399539
+ 
+Asteroid physical parameters (km, seconds, rotational period in hours):
+   GM= n.a.                RAD= n.a.               ROTPER= n.a.
+   H= 23.93                G= .150                 B-V= n.a.
+                           ALBEDO= n.a.            STYP= n.a.
+
+ASTEROID comments: 
+1: soln ref.= JPL#80, OCC=1
+2: source=ORB
+*******************************************************************************
+
+
+*******************************************************************************
+Ephemeris / API_USER Fri Nov  6 14:18:57 2026 Pasadena, USA      / Horizons    
+*******************************************************************************
+Target body name: (2024 YR4)                      {source: JPL#80}
+Center body name: Earth (399)                     {source: DE441}
+Center-site name: ATLAS Chile, Rio Hurtado
+*******************************************************************************
+Start time      : A.D. 2024-Dec-20 00:00:00.0000 UT      
+Stop  time      : A.D. 2025-Jan-20 00:00:00.0000 UT      
+Step-size       : 360 minutes
+*******************************************************************************
+Target pole/equ : undefined
+Target radii    : undefined                                                    
+Center geodetic : 289.235, -30.4709774, 1.60227   {E-lon(deg),Lat(deg),Alt(km)}
+Center cylindric: 289.235,5503.34663,-3216.29438  {E-lon(deg),Dxy(km),Dz(km)}
+Center pole/equ : ITRF93                          {East-longitude positive}
+Center radii    : 6378.137, 6378.137, 6356.752 km {Equator_a, b, pole_c}       
+Target primary  : Sun
+Vis. interferer : MOON (R_eq= 1737.400) km        {source: DE441}
+Rel. light bend : Sun                             {source: DE441}
+Rel. lght bnd GM: 1.3271E+11 km^3/s^2                                          
+Small-body perts: Yes                             {source: SB441-N16}
+Atmos refraction: NO (AIRLESS)
+RA format       : HMS
+Time format     : CAL 
+Calendar mode   : Mixed Julian/Gregorian
+EOP file        : eop.261105.p270201                                           
+EOP coverage    : DATA-BASED 1962-JAN-20 TO 2026-NOV-05. PREDICTS-> 2027-JAN-31
+Units conversion: 1 au= 149597870.700 km, c= 299792.458 km/s, 1 day= 86400.0 s 
+Table cut-offs 1: Elevation (-90.0deg=NO ),Airmass (>38.000=NO), Daylight (NO )
+Table cut-offs 2: Solar elongation (  0.0,180.0=NO ),Local Hour Angle( 0.0=NO )
+Table cut-offs 3: RA/DEC angular rate (     0.0=NO )                           
+*******************************************************************************
+Initial IAU76/J2000 heliocentric ecliptic osculating elements (au, days, deg.):
+  EPOCH=  2460739.5 ! 2025-Mar-05.00 (TDB)         Residual RMS= .058713       
+   EC= .6615750116186513   QR= .8515156397416902   TP= 2460636.9218399539      
+   OM= 271.3664200237398   W=  134.3639389609157   IN= 3.408195287401417       
+  Equivalent ICRF heliocentric cartesian coordinates (au, au/d):
+   X=-1.343458258836565E+00  Y= 8.490554565044612E-01  Z= 2.823100585587097E-01
+  VX=-1.480954130839215E-02 VY=-4.580869639249328E-03 VZ=-2.955400965710679E-03
+Asteroid physical parameters (km, seconds, rotational period in hours):        
+   GM= n.a.                RAD= n.a.               ROTPER= n.a.                
+   H= 23.93                G= .150                 B-V= n.a.                   
+                           ALBEDO= n.a.            STYP= n.a.                  
+********************************************************************************************************************
+ Date__(UT)__HR:MN     R.A._____(ICRF)_____DEC    APmag   S-brt             delta      deldot     S-O-T /r     S-T-O
+********************************************************************************************************************
+$$SOE
+ 2024-Dec-20 00:00 C   19 32 05.88 -15 49 30.4      26.    n.a.  0.04168550823724 -13.3186625   24.6487 /T  154.2970
+ 2024-Dec-20 06:00  m  19 31 01.95 -16 01 44.2      26.    n.a.  0.03974645313366 -13.6533167   24.0855 /T  154.9325
+ 2024-Dec-20 12:00 *m  19 29 53.07 -16 17 06.2      26.    n.a.  0.03773932662759 -14.0472766   23.4868 /T  155.6040
+ 2024-Dec-20 18:00 *   19 28 06.35 -16 34 18.6      26.    n.a.  0.03573071192275 -13.6588760   22.7406 /T  156.4257
+ 2024-Dec-21 00:00 C   19 26 04.73 -16 51 21.0      27.    n.a.  0.03379712083253 -13.2236564   21.9391 /T  157.3000
+ 2024-Dec-21 06:00  m  19 24 21.01 -17 10 19.6      27.    n.a.  0.03187085473437 -13.5663210   21.1898 /T  158.1171
+ 2024-Dec-21 12:00 *m  19 22 24.13 -17 34 15.4      27.    n.a.  0.02987814740546 -13.9286810   20.3658 /T  159.0094
+ 2024-Dec-21 18:00 *   19 19 31.37 -18 01 32.6      27.    n.a.  0.02788966894438 -13.5033394   19.3210 /T  160.1254
+ 2024-Dec-22 00:00 C   19 16 11.28 -18 29 43.9      27.    n.a.  0.02597883037761 -13.0698595   18.1707 /T  161.3440
+ 2024-Dec-22 06:00  m  19 13 02.53 -19 02 15.5      28.    n.a.  0.02407449637062 -13.4084710   17.0403 /T  162.5377
+ 2024-Dec-22 12:00 *m  19 09 17.21 -19 43 58.6      28.    n.a.  0.02210873771820 -13.7036024   15.7367 /T  163.9050
+ 2024-Dec-22 18:00 *   19 03 51.61 -20 33 04.4      29.    n.a.  0.02015911277885 -13.1960725   14.0416 /T  165.6664
+ 2024-Dec-23 00:00 C   18 57 18.46 -21 26 43.5      30.    n.a.  0.01829555516366 -12.7288626   12.0967 /T  167.6747
+ 2024-Dec-23 06:00  m  18 50 16.19 -22 32 03.1      32.    n.a.  0.01644393679466 -13.0012839   10.0494 /T  169.7795
+ 2024-Dec-23 12:00 *m  18 41 03.69 -23 59 06.3      35.    n.a.  0.01455053376602 -13.0837061    7.6142 /T  172.2707
+ 2024-Dec-23 18:00 *   18 27 23.21 -25 46 30.9      41.    n.a.  0.01271173338307 -12.2806913    4.8005 /T  175.1358
+ 2024-Dec-24 00:00 C   18 09 08.06 -27 51 29.0      42.    n.a.  0.01100086810988 -11.5220240    4.4489 /L  175.5013
+ 2024-Dec-24 06:00  m  17 45 10.68 -30 31 47.0      32.    n.a.  0.00935760771507 -11.2352604    9.1791 /L  170.7341
+ 2024-Dec-24 12:00 *m  17 07 54.59 -34 01 41.5      25.    n.a.  0.00780242873074 -10.0180108   17.6326 /L  162.2298
+ 2024-Dec-24 18:00 *m  16 07 04.76 -37 24 04.3      21.    n.a.  0.00654988485871  -7.1207354   30.4254 /L  149.3815
+ 2024-Dec-25 00:00 C   14 42 03.16 -38 27 29.6      19.    n.a.  0.00577184466281  -3.6226557   47.2901 /L  132.4630
+ 2024-Dec-25 06:00  m  13 04 39.24 -35 17 48.2   16.933    n.a.  0.00553863205307   0.6181316   67.1476 /L  112.5556
+ 2024-Dec-25 12:00 *m  11 38 52.59 -27 56 27.7   16.073    n.a.  0.00599629398631   5.6540899   86.9862 /L   92.6660
+ 2024-Dec-25 18:00 *m  10 42 34.53 -19 58 55.4   15.846    n.a.  0.00707591646164   8.8449711  102.2841 /L   77.3149
+ 2024-Dec-26 00:00 C   10 07 57.44 -13 52 21.4   15.890    n.a.  0.00844984161420  10.0355315  112.7657 /L   66.7830
+ 2024-Dec-26 06:00     09 43 15.07 -09 25 25.8   16.020    n.a.  0.00997783343224  11.2220278  120.4974 /L   59.0054
+ 2024-Dec-26 12:00 *m  09 25 04.06 -06 05 30.6   16.199    n.a.  0.01169548939279  12.4708714  126.3273 /L   53.1289
+ 2024-Dec-26 18:00 *m  09 12 55.77 -03 35 43.2   16.400    n.a.  0.01352522275590  12.6869130  130.4639 /L   48.9431
+ 2024-Dec-27 00:00 C   09 04 09.49 -01 42 00.7   16.588    n.a.  0.01533409692218  12.4196119  133.5759 /L   45.7849
+ 2024-Dec-27 06:00     08 56 19.63 -00 12 21.2   16.759    n.a.  0.01714932804953  12.8657560  136.2705 /L   43.0486
+ 2024-Dec-27 12:00 *m  08 49 44.09 +00 59 54.0   16.928    n.a.  0.01906069926980  13.5299839  138.5435 /L   40.7331
+ 2024-Dec-27 18:00 *m  08 45 07.01 +01 58 51.5   17.094    n.a.  0.02101208606521  13.3564668  140.2819 /L   38.9497
+ 2024-Dec-28 00:00 C   08 41 27.84 +02 48 18.0   17.244    n.a.  0.02290452230213  12.9367787  141.7334 /L   37.4563
+ 2024-Dec-28 06:00     08 37 41.74 +03 30 19.7   17.379    n.a.  0.02478881152682  13.3009380  143.1399 /L   36.0121
+ 2024-Dec-28 12:00 *m  08 34 18.81 +04 05 45.6   17.512    n.a.  0.02675437809702  13.8406820  144.4019 /L   34.7117
+ 2024-Dec-28 18:00 *m  08 31 57.92 +04 36 13.4   17.643    n.a.  0.02874264944592  13.5693126  145.4019 /L   33.6709
+ 2024-Dec-29 00:00 C   08 30 01.08 +05 03 28.6   17.761    n.a.  0.03066377501970  13.1315437  146.2909 /L   32.7440
+ 2024-Dec-29 06:00     08 27 46.75 +05 27 39.6   17.869    n.a.  0.03257619598542  13.4900520  147.2123 /L   31.7891
+ 2024-Dec-29 12:00 *m  08 25 42.10 +05 48 27.5   17.977    n.a.  0.03456604381371  13.9827423  148.0658 /L   30.9012
+ 2024-Dec-29 18:00 *m  08 24 18.23 +06 06 55.2   18.083    n.a.  0.03657140343728  13.6706413  148.7556 /L   30.1746
+ 2024-Dec-30 00:00 C   08 23 06.51 +06 24 13.2   18.179    n.a.  0.03850708628259  13.2377823  149.3949 /L   29.5015
+ 2024-Dec-30 06:00     08 21 36.23 +06 39 59.1   18.269    n.a.  0.04043578308667  13.6044598  150.0842 /L   28.7826
+ 2024-Dec-30 12:00 *m  08 20 10.90 +06 53 38.5   18.358    n.a.  0.04244064291847  14.0719680  150.7339 /L   28.1026
+ 2024-Dec-30 18:00 *m  08 19 15.83 +07 06 02.0   18.447    n.a.  0.04445689179873  13.7369325  151.2665 /L   27.5372
+ 2024-Dec-31 00:00 Cm  08 18 27.56 +07 18 04.5   18.528    n.a.  0.04640256718517  13.3142173  151.7746 /L   26.9992
+ 2024-Dec-31 06:00     08 17 21.80 +07 29 14.6   18.604    n.a.  0.04834339098594  13.6919764  152.3349 /L   26.4133
+ 2024-Dec-31 12:00 *m  08 16 19.03 +07 38 55.4   18.680    n.a.  0.05035994104372  14.1427291  152.8679 /L   25.8538
+ 2024-Dec-31 18:00 *m  08 15 40.34 +07 47 51.2   18.756    n.a.  0.05238501096696  13.7921269  153.3103 /L   25.3826
+ 2025-Jan-01 00:00 Cm  08 15 05.66 +07 56 47.9   18.826    n.a.  0.05433922518782  13.3808096  153.7412 /L   24.9257
+ 2025-Jan-01 06:00     08 14 14.94 +08 05 11.8   18.892    n.a.  0.05629074671981  13.7700377  154.2218 /L   24.4234
+ 2025-Jan-01 12:00 *m  08 13 26.36 +08 12 27.2   18.958    n.a.  0.05831787308045  14.2079680  154.6812 /L   23.9412
+ 2025-Jan-01 18:00 *m  08 12 57.79 +08 19 14.3   19.024    n.a.  0.06035126758754  13.8454771  155.0670 /L   23.5304
+ 2025-Jan-02 00:00 Cm  08 12 31.61 +08 26 12.9   19.086    n.a.  0.06231380240617  13.4457494  155.4484 /L   23.1268
+ 2025-Jan-02 06:00     08 11 50.82 +08 32 49.2   19.144    n.a.  0.06427573997443  13.8461715  155.8757 /L   22.6814
+ 2025-Jan-02 12:00 *   08 11 11.76 +08 38 30.0   19.202    n.a.  0.06631329105829  14.2733538  156.2851 /L   22.2530
+ 2025-Jan-02 18:00 *m  08 10 49.85 +08 43 52.4   19.261    n.a.  0.06835520345617  13.9010693  156.6327 /L   21.8841
+ 2025-Jan-03 00:00 Cm  08 10 29.29 +08 49 31.4   19.316    n.a.  0.07032639763950  13.5128271  156.9802 /L   21.5180
+ 2025-Jan-03 06:00     08 09 55.43 +08 54 54.3   19.367    n.a.  0.07229901286162  13.9240028  157.3694 /L   21.1143
+ 2025-Jan-03 12:00 *   08 09 23.09 +08 59 30.4   19.420    n.a.  0.07434730222155  14.3416206  157.7427 /L   20.7255
+ 2025-Jan-03 18:00 *m  08 09 05.77 +09 03 54.3   19.473    n.a.  0.07639825663143  13.9608601  158.0628 /L   20.3877
+ 2025-Jan-04 00:00 Cm  08 08 49.11 +09 08 37.4   19.522    n.a.  0.07837872019532  13.5839323  158.3856 /L   20.0499
+ 2025-Jan-04 06:00     08 08 20.28 +09 13 08.1   19.568    n.a.  0.08036255113135  14.0054018  158.7461 /L   19.6784
+ 2025-Jan-04 12:00 *   08 07 52.90 +09 16 58.2   19.616    n.a.  0.08242213199062  14.4141645  159.0918 /L   19.3206
+ 2025-Jan-04 18:00 *m  08 07 38.87 +09 20 40.4   19.664    n.a.  0.08448281916638  14.0258254  159.3911 /L   19.0069
+ 2025-Jan-05 00:00 Cm  08 07 25.01 +09 24 42.7   19.708    n.a.  0.08647329952761  13.6600456  159.6948 /L   18.6917
+ 2025-Jan-05 06:00     08 06 59.97 +09 28 35.0   19.751    n.a.  0.08846903083517  14.0913732  160.0325 /L   18.3463
+ 2025-Jan-05 12:00 *   08 06 36.36 +09 31 51.5   19.794    n.a.  0.09054058446554  14.4917189  160.3560 /L   18.0139
+ 2025-Jan-05 18:00 *m  08 06 24.76 +09 35 02.8   19.838    n.a.  0.09261178065032  14.0964557  160.6386 /L   17.7203
+ 2025-Jan-06 00:00 Cm  08 06 12.98 +09 38 34.7   19.879    n.a.  0.09461309552885  13.7416842  160.9267 /L   17.4239
+ 2025-Jan-06 06:00     08 05 50.89 +09 41 58.0   19.918    n.a.  0.09662149127058  14.1824693  161.2452 /L   17.1007
+ 2025-Jan-06 12:00 *   08 05 30.22 +09 44 49.1   19.958    n.a.  0.09870576868665  14.5746736  161.5499 /L   16.7901
+ 2025-Jan-06 18:00 *m  08 05 20.48 +09 47 37.3   19.999    n.a.  0.10078829385821  14.1729934  161.8184 /L   16.5137
+ 2025-Jan-07 00:00 Cm  08 05 10.28 +09 50 45.7   20.036    n.a.  0.10280129661786  13.8291222  162.0929 /L   16.2338
+ 2025-Jan-07 06:00     08 04 50.54 +09 53 46.6   20.072    n.a.  0.10482316450811  14.2790000  162.3946 /L   15.9304
+ 2025-Jan-07 12:00 *   08 04 32.23 +09 56 18.3   20.110    n.a.  0.10692095541037  14.6632377  162.6827 /L   15.6392
+ 2025-Jan-07 18:00 *m  08 04 23.94 +09 58 48.6   20.147    n.a.  0.10901565183818  14.2555557  162.9385 /L   15.3784
+ 2025-Jan-08 00:00 Cm  08 04 14.97 +10 01 38.7   20.182    n.a.  0.11104121387711  13.9225076  163.2007 /L   15.1137
+ 2025-Jan-08 06:00     08 03 57.14 +10 04 22.0   20.216    n.a.  0.11307738648010  14.3811468  163.4868 /L   14.8284
+ 2025-Jan-08 12:00 *   08 03 40.77 +10 06 38.6   20.251    n.a.  0.11518950309094  14.7575295  163.7595 /L   14.5552
+ 2025-Jan-08 18:00 *   08 03 33.63 +10 08 54.8   20.286    n.a.  0.11729722505103  14.3442028  164.0032 /L   14.3090
+ 2025-Jan-09 00:00 Cm  08 03 25.65 +10 11 30.3   20.318    n.a.  0.11933622768581  14.0219286  164.2535 /L   14.0588
+ 2025-Jan-09 06:00     08 03 09.40 +10 13 59.6   20.350    n.a.  0.12138755323628  14.4890281  164.5246 /L   13.7908
+ 2025-Jan-09 12:00 *   08 02 54.64 +10 16 04.1   20.383    n.a.  0.12351482265111  14.8576278  164.7822 /L   13.5349
+ 2025-Jan-09 18:00 *   08 02 48.44 +10 18 09.2   20.416    n.a.  0.12563643249435  14.4389764  165.0139 /L   13.3030
+ 2025-Jan-10 00:00 Cm  08 02 41.27 +10 20 33.0   20.447    n.a.  0.12768976426038  14.1274518  165.2522 /L   13.0671
+ 2025-Jan-10 06:00  m  08 02 26.35 +10 22 50.8   20.477    n.a.  0.12975710302631  14.6027365  165.5081 /L   12.8163
+ 2025-Jan-10 12:00 *   08 02 12.96 +10 24 45.6   20.508    n.a.  0.13190036442943  14.9636009  165.7505 /L   12.5774
+ 2025-Jan-10 18:00 *   08 02 07.54 +10 26 41.7   20.539    n.a.  0.13403673215067  14.5399204  165.9697 /L   12.3600
+ 2025-Jan-11 00:00 Cm  08 02 01.04 +10 28 55.9   20.568    n.a.  0.13610528899085  14.2391415  166.1952 /L   12.1387
+ 2025-Jan-11 06:00  m  08 01 47.27 +10 31 04.4   20.596    n.a.  0.13818951256532  14.7223589  166.4352 /L   11.9053
+ 2025-Jan-11 12:00 *   08 01 35.06 +10 32 51.3   20.626    n.a.  0.14034961688253  15.0755194  166.6615 /L   11.6839
+ 2025-Jan-11 18:00 *   08 01 30.29 +10 34 40.2   20.655    n.a.  0.14250162117852  14.6470888  166.8673 /L   11.4815
+ 2025-Jan-12 00:00 Cm  08 01 24.36 +10 36 46.4   20.683    n.a.  0.14458630765109  14.3570676  167.0788 /L   11.2755
+ 2025-Jan-12 06:00  m  08 01 11.60 +10 38 47.1   20.711    n.a.  0.14668829921786  14.8479818  167.3015 /L   11.0603
+ 2025-Jan-12 12:00 *   08 01 00.41 +10 40 27.5   20.739    n.a.  0.14886610934494  15.1934585  167.5105 /L   10.8572
+ 2025-Jan-12 18:00 *   08 00 56.22 +10 42 10.4   20.767    n.a.  0.15103463855028  14.7605430  167.7013 /L   10.6707
+ 2025-Jan-13 00:00 Cm  08 00 50.77 +10 44 10.0   20.794    n.a.  0.15313636854441  14.4813011  167.8971 /L   10.4813
+ 2025-Jan-13 06:00  m  08 00 38.90 +10 46 04.1   20.820    n.a.  0.15525702257721  14.9796877  168.1008 /L   10.2856
+ 2025-Jan-13 12:00 *   08 00 28.63 +10 47 39.2   20.848    n.a.  0.15745341274610  15.3174897  168.2904 /L   10.1020
+ 2025-Jan-13 18:00 *   08 00 24.93 +10 49 17.1   20.875    n.a.  0.15963936442529  14.8803411  168.4642 /L    9.9328
+ 2025-Jan-14 00:00 Cm  08 00 19.92 +10 51 11.1   20.901    n.a.  0.16175906029188  14.6119035  168.6421 /L    9.7614
+ 2025-Jan-14 06:00  m  08 00 08.84 +10 52 59.7   20.927    n.a.  0.16389928065400  15.1175428  168.8244 /L    9.5868
+ 2025-Jan-14 12:00 *   07 59 59.39 +10 54 30.2   20.953    n.a.  0.16611513405542  15.4476684  168.9923 /L    9.4243
+ 2025-Jan-14 18:00 *   07 59 56.13 +10 56 04.0   20.980    n.a.  0.16831941259540  15.0065237  169.1467 /L    9.2742
+ 2025-Jan-15 00:00 C   07 59 51.52 +10 57 53.2   21.005    n.a.  0.17045800220922  14.7489128  169.3039 /L    9.1229
+ 2025-Jan-15 06:00  m  07 59 41.16 +10 59 37.1   21.031    n.a.  0.17261869829605  15.2615846  169.4619 /L    8.9713
+ 2025-Jan-15 12:00 *   07 59 32.46 +11 01 03.8   21.057    n.a.  0.17485490277644  15.5840197  169.6054 /L    8.8319
+ 2025-Jan-15 18:00 *   07 59 29.61 +11 02 34.0   21.083    n.a.  0.17707841501154  15.1391001  169.7375 /L    8.7028
+ 2025-Jan-16 00:00 C   07 59 25.37 +11 04 19.1   21.108    n.a.  0.17923682696627  14.8923310  169.8710 /L    8.5736
+ 2025-Jan-16 06:00  m  07 59 15.68 +11 05 58.9   21.133    n.a.  0.18141890821461  15.4118108  170.0015 /L    8.4472
+ 2025-Jan-16 12:00 *m  07 59 07.66 +11 07 22.4   21.160    n.a.  0.18367635051163  15.7265290  170.1174 /L    8.3330
+ 2025-Jan-16 18:00 *   07 59 05.20 +11 08 49.6   21.186    n.a.  0.18591999999647  15.2780398  170.2242 /L    8.2270
+ 2025-Jan-17 00:00 C   07 59 01.29 +11 10 31.2   21.211    n.a.  0.18809915765285  15.0421173  170.3309 /L    8.1221
+ 2025-Jan-17 06:00  m  07 58 52.23 +11 12 07.4   21.236    n.a.  0.19030352719766  15.5681743  170.4307 /L    8.0231
+ 2025-Jan-17 12:00 *m  07 58 44.86 +11 13 28.1   21.262    n.a.  0.19258308655231  15.8751383  170.5162 /L    7.9360
+ 2025-Jan-17 18:00 *   07 58 42.75 +11 14 52.7   21.288    n.a.  0.19484776737340  15.4232696  170.5947 /L    7.8550
+ 2025-Jan-18 00:00 C   07 58 39.18 +11 16 31.0   21.313    n.a.  0.19704858266698  15.1981878  170.6716 /T    7.7762
+ 2025-Jan-18 06:00  m  07 58 30.71 +11 18 04.1   21.339    n.a.  0.19927613102963  15.7305848  170.7380 /T    7.7063
+ 2025-Jan-18 12:00 *m  07 58 23.94 +11 19 22.3   21.365    n.a.  0.20157867303072  16.0297479  170.7905 /T    7.6477
+ 2025-Jan-18 18:00 *   07 58 22.18 +11 20 44.6   21.391    n.a.  0.20386526398222  15.5746769  170.8386 /T    7.5930
+ 2025-Jan-19 00:00 C   07 58 18.93 +11 22 20.2   21.417    n.a.  0.20608863176006  15.3604193  170.8834 /T    7.5418
+ 2025-Jan-19 06:00  m  07 58 11.03 +11 23 50.4   21.443    n.a.  0.20834023125713  15.8989137  170.9145 /T    7.5019
+ 2025-Jan-19 12:00 *m  07 58 04.85 +11 25 06.4   21.470    n.a.  0.21066660252772  16.1902231  170.9326 /T    7.4722
+ 2025-Jan-19 18:00 *   07 58 03.42 +11 26 26.7   21.497    n.a.  0.21297596218735  15.7321162  170.9488 /T    7.4444
+ 2025-Jan-20 00:00 C   07 58 00.49 +11 27 59.7   21.522    n.a.  0.21522275552537  15.5286566  170.9604 /T    7.4210
+$$EOE
+********************************************************************************************************************
+Column meaning:
+ 
+TIME
+
+  Times PRIOR to 1962 are UT1, a mean-solar time closely related to the
+prior but now-deprecated GMT. Times AFTER 1962 are in UTC, the current
+civil or "wall-clock" time-scale. UTC is kept within 0.9 seconds of UT1
+using integer leap-seconds for 1972 and later years.
+
+  Conversion from the internal Barycentric Dynamical Time (TDB) of solar
+system dynamics to the non-uniform civil UT time-scale requested for output
+has not been determined for UTC times after the next July or January 1st.
+Therefore, the last known leap-second is used as a constant over future
+intervals.
+
+  Time tags refer to the UT time-scale conversion from TDB on Earth
+regardless of observer location within the solar system, although clock
+rates may differ due to the local gravity field and no analog to "UT"
+may be defined for that location.
+
+  Any 'b' symbol in the 1st-column denotes a B.C. date. First-column blank
+(" ") denotes an A.D. date.
+ 
+CALENDAR SYSTEM
+
+  Mixed calendar mode was active such that calendar dates after AD 1582-Oct-15
+(if any) are in the modern Gregorian system. Dates prior to 1582-Oct-5 (if any)
+are in the Julian calendar system, which is automatically extended for dates
+prior to its adoption on 45-Jan-1 BC.  The Julian calendar is useful for
+matching historical dates. The Gregorian calendar more accurately corresponds
+to the Earth's orbital motion and seasons. A "Gregorian-only" calendar mode is
+available if such physical events are the primary interest.
+
+  NOTE: "n.a." in output means quantity "not available" at the print-time.
+ 
+SOLAR PRESENCE (OBSERVING SITE)
+  Time tag is followed by a blank, then a solar-presence symbol:
+
+       '*'  Daylight (refracted solar upper-limb on or above apparent horizon)
+       'C'  Civil twilight/dawn
+       'N'  Nautical twilight/dawn
+       'A'  Astronomical twilight/dawn
+       ' '  Night OR geocentric ephemeris
+
+LUNAR PRESENCE (OBSERVING SITE)
+  The solar-presence symbol is immediately followed by a lunar-presence symbol:
+
+       'm'  Refracted upper-limb of Moon on or above apparent horizon
+       ' '  Refracted upper-limb of Moon below apparent horizon OR geocentric
+            ephemeris
+ 
+ 'R.A._____(ICRF)_____DEC' =
+  Astrometric right ascension and declination of the target center with
+respect to the observing site (coordinate origin) in the reference frame of
+the planetary ephemeris (ICRF). Compensated for down-leg light-time delay
+aberration.
+
+  Units: RA  in hours-minutes-seconds of time,    HH MM SS.ff{ffff}
+         DEC in degrees-minutes-seconds of arc,  sDD MN SC.f{ffff}
+ 
+ 'APmag   S-brt' =
+   The asteroids' approximate apparent airless visual magnitude and surface
+brightness using the standard IAU H-G system magnitude model:
+
+   APmag = H + 5*log10(delta) + 5*log10(r) - 2.5*log10((1-G)*phi_1 + G*phi_2)
+
+   For solar phase angles >90 deg, the error could exceed 1 magnitude. For
+phase angles >120 degrees, output values are rounded to the nearest integer to
+indicate error could be large and unknown. For Earth-based observers, the
+estimated dimming due to atmospheric absorption (extinction) is available as
+a separate, requestable quantity.
+
+   Surface brightness is the average airless visual magnitude of a
+square-arcsecond of the illuminated portion of the apparent disk. It is
+computed only if the target radius is known.
+
+   Units: MAGNITUDES & MAGNITUDES PER SQUARE ARCSECOND
+ 
+ 'delta      deldot' =
+   Apparent range ("delta", light-time aberrated) and range-rate ("delta-dot")
+of the target center relative to the observer. A positive "deldot" means the
+target center is moving away from the observer, negative indicates movement
+toward the observer.  Units: AU and KM/S
+ 
+ 'S-O-T /r' =
+   Sun-Observer-Target apparent SOLAR ELONGATION ANGLE seen from the observers'
+location at print-time.
+
+   The '/r' column provides a code indicating the targets' apparent position
+relative to the Sun in the observers' sky, as described below:
+
+   Case A: For an observing location on the surface of a rotating body, that
+body rotational sense is considered:
+
+    /T indicates target TRAILS Sun   (evening sky: rises and sets AFTER Sun)
+    /L indicates target LEADS Sun    (morning sky: rises and sets BEFORE Sun)
+
+   Case B: For an observing point that does not have a rotational model (such
+as a spacecraft), the "leading" and "trailing" condition is defined by the
+observers' heliocentric ORBITAL motion:
+
+    * If continuing in the observers' current direction of heliocentric
+       motion would encounter the targets' apparent longitude first, followed
+       by the Sun's, the target LEADS the Sun as seen by the observer.
+
+    * If the Sun's apparent longitude would be encountered first, followed
+       by the targets', the target TRAILS the Sun.
+
+   Two other codes can be output:
+    /* indicates observer is Sun-centered    (undefined)
+    /? Target is aligned with Sun center     (no lead or trail)
+
+   The S-O-T solar elongation angle is numerically the minimum separation
+angle of the Sun and target in the sky in any direction. It does NOT indicate
+the amount of separation in the leading or trailing directions, which would
+be defined along the equator of a spherical coordinate system.
+
+   Units: DEGREES
+ 
+ 'S-T-O' =
+   The Sun-Target-Observer angle; the interior vertex angle at target center
+formed by a vector from the target to the apparent center of the Sun (at
+reflection time on the target) and the apparent vector from target to the
+observer at print-time. Slightly different from true PHASE ANGLE (requestable
+separately) at the few arcsecond level in that it includes stellar aberration
+on the down-leg from target to observer.  Units: DEGREES
+
+Computations by ...
+
+    Solar System Dynamics Group, Horizons On-Line Ephemeris System
+    4800 Oak Grove Drive, Jet Propulsion Laboratory
+    Pasadena, CA  91109   USA
+
+    General site: https://ssd.jpl.nasa.gov/
+    Mailing list: https://ssd.jpl.nasa.gov/email_list.html
+    System news : https://ssd.jpl.nasa.gov/horizons/news.html
+    User Guide  : https://ssd.jpl.nasa.gov/horizons/manual.html
+    Connect     : browser        https://ssd.jpl.nasa.gov/horizons/app.html#/x
+                  API            https://ssd-api.jpl.nasa.gov/doc/horizons.html
+                  command-line   telnet ssd.jpl.nasa.gov 6775
+                  e-mail/batch   https://ssd.jpl.nasa.gov/ftp/ssd/horizons_batch.txt
+                  scripts        https://ssd.jpl.nasa.gov/ftp/ssd/SCRIPTS
+    Inquiries   : Jon.D.Giorgini@jpl.nasa.gov
+
+********************************************************************************************************************
