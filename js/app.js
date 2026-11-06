@@ -13,6 +13,8 @@ const store = {
   set(k, v) { try { localStorage.setItem('ephemeral:' + k, JSON.stringify(v)); } catch { /* storage blocked */ } },
 };
 
+// Ephemeral's own Cloudflare Worker (worker/ephemeral-proxy.js). Forks should deploy their own.
+const DEFAULT_PROXY = 'https://ephemeral-proxy.eagnespuerto.workers.dev';
 const DEFAULT_YOU = { lat: 14.5995, lon: 120.9842, h: 10, label: 'Manila (default, change me)', code: '' };
 const SAMPLE = { file: 'data/samples/horizons-2024YR4-W68.txt', disc: 'W68', discTime: Date.UTC(2024, 11, 27, 4, 0) };
 
@@ -24,7 +26,7 @@ const state = {
   constellations: [],
   obscodes: {},
   you: { ...DEFAULT_YOU, ...store.get('you', {}) },
-  proxy: store.get('proxy', ''),
+  proxy: store.get('proxy', '') || DEFAULT_PROXY,
   playing: false,
   speed: 3600,
   range: [Date.now() - 15 * 864e5, Date.now() + 15 * 864e5],
@@ -553,7 +555,13 @@ $('#btn-geo').addEventListener('click', () => {
   }, err => toast('Location not available: ' + err.message), { timeout: 10000 });
 });
 $('#proxy').value = state.proxy;
-$('#proxy').addEventListener('change', e => { state.proxy = e.target.value.trim(); store.set('proxy', state.proxy); testProxy(); });
+$('#proxy').addEventListener('change', e => {
+  // An empty box means the built-in proxy.
+  state.proxy = e.target.value.trim() || DEFAULT_PROXY;
+  store.set('proxy', state.proxy === DEFAULT_PROXY ? '' : state.proxy);
+  $('#proxy').value = state.proxy;
+  testProxy();
+});
 $('#btn-proxy-test').addEventListener('click', testProxy);
 async function testProxy() {
   const base = proxyBase(state.proxy);
@@ -562,10 +570,11 @@ async function testProxy() {
   out.textContent = 'Testing…';
   try {
     const j = await getJSON(base + '/', 8000);
-    out.textContent = j && j.ok ? `Proxy works (${j.service || 'ok'}).` : 'Proxy answered, but not as expected.';
+    const which = state.proxy === DEFAULT_PROXY ? 'Built-in proxy' : 'Your proxy';
+    out.textContent = j && j.ok ? `${which} works (${j.service || 'ok'}).` : `${which} answered, but not as expected.`;
   } catch (e) { out.textContent = `Proxy not reachable: ${e.message}`; }
 }
-if (state.proxy) testProxy();
+testProxy();
 
 // ---------------- panels ----------------
 document.querySelectorAll('.panel .max').forEach(b => b.addEventListener('click', () => {

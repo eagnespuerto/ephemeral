@@ -57,10 +57,10 @@
       </section>
 
       <details class="block" id="proxy-block">
-        <summary>Proxy for Horizons, MPC and live Scout</summary>
-        <p class="hint">JPL Horizons, the MPC Ephemeris Service and JPL Scout do not allow calls from other websites. Deploy the small Cloudflare Worker in <code>worker/</code> (<code>npx wrangler deploy</code>) and paste its URL here. Without it, name search still finds Scout objects through the hourly snapshot.</p>
+        <summary>Proxy for Horizons, MPC and live Scout (built in)</summary>
+        <p class="hint">JPL Horizons, the MPC Ephemeris Service and JPL Scout do not allow calls from other websites. Ephemeral sends those calls through its own small Cloudflare Worker, set below. To use your own, deploy <code>worker/</code> (<code>npx wrangler deploy</code>) and paste its URL. Clear the box to go back to the built-in one.</p>
         <div class="row-btns">
-          <input id="proxy" type="url" placeholder="https://ephemeral-proxy.you.workers.dev" style="flex:1">
+          <input id="proxy" type="url" placeholder="https://ephemeral-proxy.eagnespuerto.workers.dev" style="flex:1">
           <button id="btn-proxy-test" class="ghost small">Test</button>
         </div>
         <p id="proxy-status" class="hint"></p>
@@ -150,7 +150,7 @@
   <dialog id="help">
     <h2>How to use Ephemeral</h2>
     <ol>
-      <li><b>Search by name</b>: type a name or designation (Apophis, 2024 YR4, 1P, C/2023 A3, Mars) and press Enter. Ephemeral asks JPL Horizons, the MPC Ephemeris Service and JPL Scout, and fills the card with the best ephemeris. Click <i>Use</i> to switch source. Set the span and step under the name. Horizons and MPC need the proxy (see the sidebar).</li>
+      <li><b>Search by name</b>: type a name or designation (Apophis, 2024 YR4, 1P, C/2023 A3, Mars) and press Enter. Ephemeral asks JPL Horizons, the MPC Ephemeris Service and JPL Scout, and fills the card with the best ephemeris. Click <i>Use</i> to switch source. Set the span and step under the name. Horizons and MPC go through Ephemeral's proxy (see the sidebar).</li>
       <li><b>Or paste an ephemeris</b> into an object card. It reads JPL Horizons observer tables (text or CSV), the MPC Ephemeris Service, Find_Orb, MPC 80-column astrometry, and simple <code>time RA Dec [Δ]</code> tables. Sexagesimal RA is hours; decimal RA is degrees. Positions are taken as J2000.</li>
       <li><b>Discovery POV</b> shows the sky from the discovery site. Type its MPC code in the card. Horizons topocentric tables and 80-column astrometry (the <code>*</code> line) fill it in for you.</li>
       <li><b>Your POV</b> uses your location. Click <i>Use my location</i> or type a code.</li>
