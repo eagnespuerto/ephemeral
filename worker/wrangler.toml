@@ -1,0 +1,7 @@
+name = "ephemeral-proxy"
+main = "ephemeral-proxy.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# Comma-separated list of sites allowed to use this proxy. "*" allows any site.
+ALLOWED_ORIGINS = "https://eagnespuerto.github.io,http://localhost:8765"
