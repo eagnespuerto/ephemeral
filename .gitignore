@@ -1,0 +1,4 @@
+# Scout snapshot is built by the Pages workflow every hour
+data/scout/
+__pycache__/
+.claude/
