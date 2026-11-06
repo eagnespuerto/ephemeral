@@ -69,8 +69,8 @@ Type a name or designation in a card (*Apophis*, *2024 YR4*, *1P*, *C/2023 A3*, 
 
 | Source | What it returns | Needs the proxy? |
 |---|---|---|
-| **JPL Horizons** | Geocentric observer table (RA, Dec, Δ, mag) from JPL's orbit. Comets get their latest apparition. Ambiguous names, like *Mars* or *Halley*, show a list to pick from. | Yes |
-| **MPC Ephemeris Service** | Geocentric ephemeris from the MPC orbit (up to 1441 rows). | Yes |
+| **JPL Horizons** | Geocentric observer table (RA, Dec, Δ, mag) from JPL's orbit. Comets get their latest apparition. Ambiguous names, like *Mars* or *Halley*, show a list to pick from. | Yes (built in) |
+| **MPC Ephemeris Service** | Geocentric ephemeris from the MPC orbit (up to 1441 rows). | Yes (built in) |
 | **JPL Scout** | For unconfirmed NEOCP objects: the mean of Scout's orbit samples, plus the sample cloud. | No (hourly snapshot) |
 
 The best answer fills the card: Horizons first, then MPC, then Scout. Click *Use* on another row to switch. The ephemeris is geocentric, and Ephemeral works out each site's view from Δ. Set the time span and step under the name. By default it covers 15 days either side of the slider, every 6 hours.
@@ -85,9 +85,11 @@ Horizons, the MPC Ephemeris Service and Scout do not send CORS headers, so a pag
 cd worker && npx wrangler deploy
 ```
 
-Paste the Worker's URL (for example `https://ephemeral-proxy.<you>.workers.dev`) into **Proxy for Horizons, MPC and live Scout** in the sidebar, then click *Test*. `ALLOWED_ORIGINS` in [`worker/wrangler.toml`](worker/wrangler.toml) limits which sites may use it.
+The live site uses its own Worker at `https://ephemeral-proxy.eagnespuerto.workers.dev`, so search works with no setup. `ALLOWED_ORIGINS` in [`worker/wrangler.toml`](worker/wrangler.toml) limits it to the GitHub Pages site and `localhost:8765`.
 
-Without a proxy:
+If you fork Ephemeral, deploy your own Worker and change `DEFAULT_PROXY` in [`js/app.js`](js/app.js), or paste its URL into **Proxy for Horizons, MPC and live Scout** in the sidebar and click *Test*.
+
+If the proxy is down or blank:
 
 - Scout still works through the **hourly snapshot**. The [Pages workflow](.github/workflows/pages.yml) runs [`tools/fetch_scout.py`](tools/fetch_scout.py) every hour, saves every Scout object with 60 orbit samples, and deploys them with the site.
 - The Horizons row gives an *Open Horizons* link with the ephemeris ready, which you can copy and paste into the card.
