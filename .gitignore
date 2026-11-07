@@ -2,3 +2,5 @@
 data/scout/
 __pycache__/
 .claude/
+.wrangler/
+node_modules/
